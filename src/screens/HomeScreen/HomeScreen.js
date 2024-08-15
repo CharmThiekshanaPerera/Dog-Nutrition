@@ -6,12 +6,10 @@ import products from '../../data/products';
 
 const Header = ({ navigation }) => (
   <View style={styles.headerContainer}>
-    {/* Logo Section */}
     <View style={styles.logoContainer}>
-      <Text style={styles.logoText}>Open</Text>
-      <Text style={styles.logoHighlight}>Shop.</Text>
+      <Text style={styles.logoText}>Dog</Text>
+      <Text style={styles.logoHighlight}>Nutrition</Text>
     </View>
-    {/* Icons Section */}
     <View style={styles.iconRow}>
       <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
         <MaterialCommunityIcons name="account-circle-outline" style={styles.icon} />
@@ -28,7 +26,7 @@ const Header = ({ navigation }) => (
 
 const SearchBar = ({ navigation }) => (
   <View style={styles.searchContainer}>
-    <TextInput placeholder="Search for a product..." style={styles.searchInput} />
+    <TextInput placeholder="Search for products..." style={styles.searchInput} />
     <TouchableOpacity style={styles.searchIcon} onPress={() => navigation.navigate('DiscoverScreen')}>
       <Feather name="search" size={24} color="grey" />
     </TouchableOpacity>
@@ -39,6 +37,7 @@ const BestSellerItem = ({ item }) => (
   <TouchableOpacity style={styles.productCard}>
     <Image style={styles.productThumbnail} source={{ uri: item.thumbnail }} />
     <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
+    <Text style={styles.productCategory}>{item.categoryName}</Text>
     <View style={styles.productInfo}>
       <Text style={styles.productPrice}>${item.price}</Text>
       <View style={styles.ratingContainer}>
@@ -52,18 +51,13 @@ const BestSellerItem = ({ item }) => (
 const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header Section */}
       <Header navigation={navigation} />
-      {/* Search Bar */}
       <SearchBar navigation={navigation} />
-      {/* Banners Carousel */}
       <CarouselComponent />
-      {/* Section Title */}
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Best Sellers</Text>
       </View>
 
-      {/* Product List */}
       <FlatList
         data={products}
         renderItem={({ item }) => <BestSellerItem item={item} />}
@@ -161,6 +155,11 @@ const styles = StyleSheet.create({
   productTitle: {
     fontSize: 16,
     fontWeight: '500',
+    marginBottom: 5,
+  },
+  productCategory: {
+    fontSize: 14,
+    color: '#888',
     marginBottom: 5,
   },
   productInfo: {

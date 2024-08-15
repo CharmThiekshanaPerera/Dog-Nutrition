@@ -4,6 +4,8 @@ import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import DiscoverScreen from '../screens/DiscoverScreen/DiscoverScreen';
+import CategoryScreen from '../screens/CategoryScreen/CategoryScreen';
+import ProductScreen from '../screens/ProductScreen/ProductScreen';
 
 const AppNavigator = () => {
 
@@ -15,6 +17,8 @@ const AppNavigator = () => {
                 <Stack.Screen name='AuthScreen' component={AuthScreen} />
                 <Stack.Screen name='HomeScreen' component={HomeScreen} />
                 <Stack.Screen name='DiscoverScreen' component={DiscoverScreen}/>
+                <Stack.Screen name="CategoryScreen" component={CategoryScreen} options={{ title: 'Categories' }} />
+                <Stack.Screen name="ProductScreen" component={ProductScreen} options={({ route }) => ({ title: route.params.categoryName })} />
             </Stack.Navigator>
         </NavigationContainer>
     )
