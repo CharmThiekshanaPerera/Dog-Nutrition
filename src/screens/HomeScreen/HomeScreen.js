@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, SafeAreaView } from 'react-native';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import CarouselComponent from './components/CarouselComponent';
 import products from '../../data/products';
@@ -52,30 +52,27 @@ const BestSellerItem = ({ item }) => (
 const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
-        {/* Header Section */}
-        <Header navigation={navigation} />
-        {/* Search Bar */}
-        <SearchBar navigation={navigation} />
-        {/* Banners Carousel */}
-        <CarouselComponent />
-        {/* Best Sellers Section */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Best Sellers</Text>
-        </View>
-      <ScrollView>
-        
-          <FlatList
-            key={'two-columns'} // Static key to avoid the error
-            data={products}
-            renderItem={({ item }) => <BestSellerItem item={item} />}
-            keyExtractor={(item) => item.id.toString()}
-            numColumns={2} // Set the number of columns to 2
-            columnWrapperStyle={styles.columnWrapper} // Apply styles to the row
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.bestSellersList}
-          />
-       
-      </ScrollView>
+      {/* Header Section */}
+      <Header navigation={navigation} />
+      {/* Search Bar */}
+      <SearchBar navigation={navigation} />
+      {/* Banners Carousel */}
+      <CarouselComponent />
+      {/* Section Title */}
+      <View style={styles.sectionContainer}>
+        <Text style={styles.sectionTitle}>Best Sellers</Text>
+      </View>
+
+      {/* Product List */}
+      <FlatList
+        data={products}
+        renderItem={({ item }) => <BestSellerItem item={item} />}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
+        columnWrapperStyle={styles.columnWrapper}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.bestSellersList}
+      />
     </SafeAreaView>
   );
 };
@@ -142,18 +139,18 @@ const styles = StyleSheet.create({
   },
   bestSellersList: {
     paddingBottom: 20,
+    paddingHorizontal: 20,
   },
   columnWrapper: {
-    justifyContent: 'space-between', // Ensures even spacing between items
-    margin: 10,
-    //marginBottom:20
+    justifyContent: 'space-between',
+    marginBottom: 20,
   },
   productCard: {
-    width: '48%', // Adjusts width for two items per row
+    width: '48%',
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 10,
-    //marginBottom: 10,
+    marginBottom: 10,
   },
   productThumbnail: {
     width: '100%',
