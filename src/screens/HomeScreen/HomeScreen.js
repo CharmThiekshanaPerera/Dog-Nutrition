@@ -52,7 +52,6 @@ const BestSellerItem = ({ item }) => (
 const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
         {/* Header Section */}
         <Header navigation={navigation} />
         {/* Search Bar */}
@@ -62,6 +61,9 @@ const HomeScreen = ({ navigation }) => {
         {/* Best Sellers Section */}
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Best Sellers</Text>
+        </View>
+      <ScrollView>
+        
           <FlatList
             key={'two-columns'} // Static key to avoid the error
             data={products}
@@ -72,7 +74,7 @@ const HomeScreen = ({ navigation }) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.bestSellersList}
           />
-        </View>
+       
       </ScrollView>
     </SafeAreaView>
   );
@@ -143,14 +145,15 @@ const styles = StyleSheet.create({
   },
   columnWrapper: {
     justifyContent: 'space-between', // Ensures even spacing between items
-    marginBottom: 20,
+    margin: 10,
+    //marginBottom:20
   },
   productCard: {
     width: '48%', // Adjusts width for two items per row
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 10,
-    marginBottom: 10,
+    //marginBottom: 10,
   },
   productThumbnail: {
     width: '100%',
