@@ -2,13 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, SafeAreaView } from 'react-native';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 import CarouselComponent from './components/CarouselComponent';
+import categories from '../../data/categories';
 import products from '../../data/products';
 
 const Header = ({ navigation }) => (
   <View style={styles.headerContainer}>
     <View style={styles.logoContainer}>
-      <Text style={styles.logoText}>Dog</Text>
-      <Text style={styles.logoHighlight}>Nutrition</Text>
+      <Text style={styles.logoText}>Open</Text>
+      <Text style={styles.logoHighlight}>Shop.</Text>
     </View>
     <View style={styles.iconRow}>
       <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
@@ -26,18 +27,26 @@ const Header = ({ navigation }) => (
 
 const SearchBar = ({ navigation }) => (
   <View style={styles.searchContainer}>
-    <TextInput placeholder="Search for products..." style={styles.searchInput} />
+    <TextInput placeholder="Search for a product..." style={styles.searchInput} />
     <TouchableOpacity style={styles.searchIcon} onPress={() => navigation.navigate('DiscoverScreen')}>
       <Feather name="search" size={24} color="grey" />
     </TouchableOpacity>
   </View>
 );
 
+const CategoryItem = ({ item, navigation }) => (
+  <TouchableOpacity
+    style={styles.categoryItem}
+    onPress={() => navigation.navigate('ProductScreen', { categoryId: item.id, categoryName: item.name })}
+  >
+    <Text style={styles.categoryText}>{item.name}</Text>
+  </TouchableOpacity>
+);
+
 const BestSellerItem = ({ item }) => (
   <TouchableOpacity style={styles.productCard}>
     <Image style={styles.productThumbnail} source={{ uri: item.thumbnail }} />
     <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
-    <Text style={styles.productCategory}>{item.categoryName}</Text>
     <View style={styles.productInfo}>
       <Text style={styles.productPrice}>${item.price}</Text>
       <View style={styles.ratingContainer}>
@@ -51,22 +60,35 @@ const BestSellerItem = ({ item }) => (
 const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header Section */}
       <Header navigation={navigation} />
+      {/* Search Bar */}
       <SearchBar navigation={navigation} />
-      <CarouselComponent />
+      {/* Category List */}
+      <View style={styles.categoryContainer}>
+        <FlatList
+          data={categories}
+          renderItem={({ item }) => <CategoryItem item={item} navigation={navigation} />}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoryList}
+        />
+      </View>
+      {/* Banners Carousel */}
+      {/* <CarouselComponent /> */}
+      {/* Best Sellers Section */}
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Best Sellers</Text>
+        <FlatList
+          data={products}
+          renderItem={({ item }) => <BestSellerItem item={item} />}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+          columnWrapperStyle={styles.columnWrapper}
+          contentContainerStyle={styles.bestSellersList}
+        />
       </View>
-
-      <FlatList
-        data={products}
-        renderItem={({ item }) => <BestSellerItem item={item} />}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-        columnWrapperStyle={styles.columnWrapper}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.bestSellersList}
-      />
     </SafeAreaView>
   );
 };
@@ -122,6 +144,24 @@ const styles = StyleSheet.create({
   searchIcon: {
     marginLeft: 10,
   },
+  categoryContainer: {
+    paddingHorizontal: 20,
+    //marginBottom: 20,
+  },
+  categoryList: {
+    paddingVertical: 10,
+  },
+  categoryItem: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  categoryText: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
   sectionContainer: {
     paddingHorizontal: 20,
     marginTop: 20,
@@ -133,7 +173,6 @@ const styles = StyleSheet.create({
   },
   bestSellersList: {
     paddingBottom: 20,
-    paddingHorizontal: 20,
   },
   columnWrapper: {
     justifyContent: 'space-between',
