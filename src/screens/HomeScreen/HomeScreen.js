@@ -63,10 +63,13 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Best Sellers</Text>
           <FlatList
+            key={'two-columns'} // Static key to avoid the error
             data={products}
             renderItem={({ item }) => <BestSellerItem item={item} />}
-            horizontal
-            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id.toString()}
+            numColumns={2} // Set the number of columns to 2
+            columnWrapperStyle={styles.columnWrapper} // Apply styles to the row
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.bestSellersList}
           />
         </View>
@@ -136,16 +139,23 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   bestSellersList: {
-    paddingVertical: 10,
+    paddingBottom: 20,
+  },
+  columnWrapper: {
+    justifyContent: 'space-between', // Ensures even spacing between items
+    marginBottom: 20,
   },
   productCard: {
-    width: 160,
-    marginRight: 20,
+    width: '48%', // Adjusts width for two items per row
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 10,
+    marginBottom: 10,
   },
   productThumbnail: {
     width: '100%',
     height: 180,
-    borderRadius: 12,
+    borderRadius: 8,
     marginBottom: 10,
   },
   productTitle: {
