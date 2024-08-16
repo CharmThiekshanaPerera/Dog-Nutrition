@@ -8,7 +8,7 @@ const products = [
       categoryName: 'Dog Food',
       description: 'High-quality dog food made with real chicken and brown rice. Perfect for adult dogs of all breeds.',
       stock: 120,
-      thumbnail: 'https://example.com/images/product1.jpg',
+      thumbnail: 'https://static-01.daraz.lk/p/22897b03f60e2c3b3176f04d1f2c7330.jpg',
     },
     {
       id: 2,
@@ -19,7 +19,7 @@ const products = [
       categoryName: 'Dog Food',
       description: 'Grain-free dog food made with fresh salmon and sweet potatoes, ideal for dogs with sensitive stomachs.',
       stock: 75,
-      thumbnail: 'https://example.com/images/product2.jpg',
+      thumbnail: 'https://www.harringtonspetfood.com/cdn/shop/products/HAR_10KG_GF_Salmon_FOP.png?v=1669106245&width=1600',
     },
     {
       id: 3,
@@ -30,7 +30,7 @@ const products = [
       categoryName: 'Dog Treats',
       description: 'Organic dog treats made with natural peanut butter and no added preservatives.',
       stock: 200,
-      thumbnail: 'https://example.com/images/product3.jpg',
+      thumbnail: 'https://rileyspets.com/cdn/shop/products/FAV-851614004416_1_1024x1024.jpg?v=1590087071',
     },
     {
       id: 4,
@@ -41,7 +41,7 @@ const products = [
       categoryName: 'Dog Food',
       description: 'Specially formulated puppy food made with chicken and brown rice to support healthy growth.',
       stock: 95,
-      thumbnail: 'https://example.com/images/product4.jpg',
+      thumbnail: 'https://i5.walmartimages.com/seo/Purina-Puppy-Chow-High-Protein-Dry-Puppy-Food-Complete-With-Real-Chicken-15-lb-Bag_8e7a0232-00ce-437d-9e49-61e210db37ea.b74853cecdffbb6a43efb586caf98057.jpeg',
     },
     {
       id: 5,
