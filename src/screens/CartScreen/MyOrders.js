@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
+  const [expandedOrderId, setExpandedOrderId] = useState(null);
 
   useEffect(() => {
     const loadOrders = async () => {
@@ -19,19 +21,50 @@ const MyOrders = () => {
     loadOrders();
   }, []);
 
-  const renderItem = ({ item }) => (
-    <View style={styles.orderItem}>
-      <Text style={styles.orderTitle}>Order #{item.id}</Text>
-      <Text style={styles.orderDate}>{item.date}</Text>
-      <Text style={styles.orderTotal}>Total: ${item.total.toFixed(2)}</Text>
-    </View>
-  );
+  const toggleOrderDetails = (orderId) => {
+    setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
+  };
+
+  const renderOrderItem = ({ item }) => {
+    const isExpanded = expandedOrderId === item.id;
+
+    return (
+      <View style={styles.orderItem}>
+        <TouchableOpacity style={styles.orderHeader} onPress={() => toggleOrderDetails(item.id)}>
+          <View>
+            <Text style={styles.orderTitle}>Order #{item.id}</Text>
+            <Text style={styles.orderDate}>{item.date}</Text>
+          </View>
+          <MaterialCommunityIcons
+            name={isExpanded ? 'chevron-up' : 'chevron-down'}
+            size={24}
+            color="#333"
+          />
+        </TouchableOpacity>
+
+        {isExpanded && (
+          <View style={styles.orderDetails}>
+            {item.items.map((orderItem) => (
+              <View key={orderItem.id} style={styles.orderItemDetails}>
+                <Text style={styles.orderProductName}>{orderItem.title}</Text>
+                <Text style={styles.orderProductQuantity}>Quantity: {orderItem.quantity}</Text>
+                <Text style={styles.orderProductPrice}>Price: ${orderItem.price.toFixed(2)}</Text>
+              </View>
+            ))}
+            <View style={styles.orderTotalContainer}>
+              <Text style={styles.orderTotalText}>Total: ${item.total.toFixed(2)}</Text>
+            </View>
+          </View>
+        )}
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
       <FlatList
         data={orders}
-        renderItem={renderItem}
+        renderItem={renderOrderItem}
         keyExtractor={(item) => item.id.toString()}
         ListEmptyComponent={<Text style={styles.emptyText}>No orders placed yet.</Text>}
       />
@@ -52,6 +85,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 2,
   },
+  orderHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   orderTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -62,10 +100,33 @@ const styles = StyleSheet.create({
     color: '#888',
     marginBottom: 5,
   },
-  orderTotal: {
+  orderDetails: {
+    marginTop: 10,
+  },
+  orderItemDetails: {
+    marginBottom: 10,
+  },
+  orderProductName: {
     fontSize: 16,
+    fontWeight: '500',
+  },
+  orderProductQuantity: {
+    fontSize: 14,
+    color: '#555',
+  },
+  orderProductPrice: {
+    fontSize: 14,
+    color: '#555',
+  },
+  orderTotalContainer: {
+    marginTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    paddingTop: 10,
+  },
+  orderTotalText: {
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
   },
   emptyText: {
     fontSize: 18,
