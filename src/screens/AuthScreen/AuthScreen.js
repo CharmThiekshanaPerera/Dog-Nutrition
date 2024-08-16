@@ -1,11 +1,12 @@
-import React from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // InputField component
-const InputField = ({ icon, placeholder, isPassword = false }) => (
+const InputField = ({ icon, placeholder, value, onChangeText, isPassword = false }) => (
   <View style={styles.inputContainer}>
     <AntDesign name={icon} size={24} style={styles.inputIcon} />
     <TextInput
@@ -13,33 +14,87 @@ const InputField = ({ icon, placeholder, isPassword = false }) => (
       secureTextEntry={isPassword}
       style={styles.inputText}
       placeholderTextColor="#808080"
+      value={value}
+      onChangeText={onChangeText}
     />
   </View>
 );
 
 // SignIn screen component
-const SignIn = () => (
-  <View style={styles.formContainer}>
-    <InputField icon="mail" placeholder="Email" />
-    <InputField icon="lock" placeholder="Password" isPassword={true} />
-    <TouchableOpacity style={styles.button}>
-      <Text style={styles.buttonText}>SIGN IN</Text>
-    </TouchableOpacity>
-  </View>
-);
+const SignIn = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignIn = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem('user');
+      if (storedUser !== null) {
+        const user = JSON.parse(storedUser);
+        if (user.email === email && user.password === password) {
+          Alert.alert('Sign In Successful', 'Welcome back!');
+          navigation.navigate('ProfileScreen'); // Navigate to ProfileScreen
+        } else {
+          Alert.alert('Invalid Credentials', 'Please check your email or password.');
+        }
+      } else {
+        Alert.alert('No User Found', 'Please sign up first.');
+      }
+    } catch (error) {
+      console.error('Error during sign-in:', error);
+    }
+  };
+
+  return (
+    <View style={styles.formContainer}>
+      <InputField icon="mail" placeholder="Email" value={email} onChangeText={setEmail} />
+      <InputField icon="lock" placeholder="Password" isPassword={true} value={password} onChangeText={setPassword} />
+      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+        <Text style={styles.buttonText}>SIGN IN</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 // SignUp screen component
-const SignUp = () => (
-  <View style={styles.formContainer}>
-    <InputField icon="user" placeholder="Full Name" />
-    <InputField icon="mail" placeholder="Email" />
-    <InputField icon="lock" placeholder="Password" isPassword={true} />
-    <InputField icon="lock" placeholder="Re-enter Password" isPassword={true} />
-    <TouchableOpacity style={styles.button}>
-      <Text style={styles.buttonText}>SIGN UP</Text>
-    </TouchableOpacity>
-  </View>
-);
+const SignUp = ({ navigation }) => {
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleSignUp = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Password Mismatch', 'Please make sure both passwords match.');
+      return;
+    }
+
+    const newUser = {
+      fullName,
+      email,
+      password,
+    };
+
+    try {
+      await AsyncStorage.setItem('user', JSON.stringify(newUser));
+      Alert.alert('Sign Up Successful', 'You can now sign in.');
+      navigation.navigate('Sign In'); // Navigate to Sign In screen
+    } catch (error) {
+      console.error('Error during sign-up:', error);
+    }
+  };
+
+  return (
+    <View style={styles.formContainer}>
+      <InputField icon="user" placeholder="Full Name" value={fullName} onChangeText={setFullName} />
+      <InputField icon="mail" placeholder="Email" value={email} onChangeText={setEmail} />
+      <InputField icon="lock" placeholder="Password" isPassword={true} value={password} onChangeText={setPassword} />
+      <InputField icon="lock" placeholder="Re-enter Password" isPassword={true} value={confirmPassword} onChangeText={setConfirmPassword} />
+      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+        <Text style={styles.buttonText}>SIGN UP</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -76,6 +131,13 @@ const AuthScreen = ({ navigation }) => {
   );
 };
 
+// ProfileScreen component
+const ProfileScreen = () => (
+  <View style={styles.container}>
+    <Text style={styles.profileText}>Welcome to your profile!</Text>
+  </View>
+);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -105,7 +167,7 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     paddingVertical: 20,
-    paddingHorizontal:10,
+    paddingHorizontal: 10,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -140,12 +202,18 @@ const styles = StyleSheet.create({
   guestButton: {
     alignItems: 'center',
     marginTop: 20,
-    marginBottom:20
+    marginBottom: 20,
   },
   guestButtonText: {
     color: '#808080',
     textDecorationLine: 'underline',
     fontWeight: '500',
+  },
+  profileText: {
+    fontSize: 24,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: 50,
   },
 });
 

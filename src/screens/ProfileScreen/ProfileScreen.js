@@ -1,66 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ProfileScreen = ({ route }) => {
-  const { user } = route.params;
-  const [fullName, setFullName] = useState(user.fullName);
-  const [email, setEmail] = useState(user.email);
-  const [address, setAddress] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
+// ProfileScreen component
+const ProfileScreen = ({ navigation }) => {
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const loadProfileData = async () => {
-      const storedAddress = await AsyncStorage.getItem(`${email}_address`);
-      const storedPaymentMethod = await AsyncStorage.getItem(`${email}_paymentMethod`);
-      if (storedAddress) setAddress(storedAddress);
-      if (storedPaymentMethod) setPaymentMethod(storedPaymentMethod);
+    const getUserData = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (error) {
+        console.error('Error loading user data:', error);
+      }
     };
 
-    loadProfileData();
+    getUserData();
   }, []);
 
-  const saveProfile = async () => {
+  const handleLogout = async () => {
     try {
-      await AsyncStorage.setItem(`${email}_address`, address);
-      await AsyncStorage.setItem(`${email}_paymentMethod`, paymentMethod);
-      Alert.alert('Success', 'Profile updated successfully!');
+      await AsyncStorage.removeItem('user');
+      navigation.navigate('AuthScreen'); // Navigate back to the Auth screen
     } catch (error) {
-      Alert.alert('Error', 'Failed to update profile.');
+      console.error('Error logging out:', error);
     }
   };
 
+  if (!user) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.loadingText}>Loading user details...</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Profile Information</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Full Name"
-        value={fullName}
-        onChangeText={setFullName}
-        editable={false}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        editable={false}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Address"
-        value={address}
-        onChangeText={setAddress}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Payment Method"
-        value={paymentMethod}
-        onChangeText={setPaymentMethod}
-      />
-      <TouchableOpacity style={styles.button} onPress={saveProfile}>
-        <Text style={styles.buttonText}>Save Profile</Text>
+      <Text style={styles.profileTitle}>Profile Details</Text>
+      <View style={styles.detailContainer}>
+        <Text style={styles.detailLabel}>Full Name:</Text>
+        <Text style={styles.detailValue}>{user.fullName}</Text>
+      </View>
+      <View style={styles.detailContainer}>
+        <Text style={styles.detailLabel}>Email:</Text>
+        <Text style={styles.detailValue}>{user.email}</Text>
+      </View>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutButtonText}>Logout</Text>
       </TouchableOpacity>
     </View>
   );
@@ -70,31 +60,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    justifyContent: 'center',
     backgroundColor: '#f8f9fa',
   },
-  header: {
-    fontSize: 24,
+  profileTitle: {
+    fontSize: 28,
     fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 30,
+    color: '#333',
+  },
+  detailContainer: {
     marginBottom: 20,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#d1d1d1',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 15,
-    backgroundColor: '#fff',
+  detailLabel: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: '#666',
   },
-  button: {
-    backgroundColor: '#000',
+  detailValue: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000',
+  },
+  logoutButton: {
+    marginTop: 30,
+    backgroundColor: '#d9534f',
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 20,
   },
-  buttonText: {
+  logoutButtonText: {
     color: '#fff',
     fontWeight: '600',
+  },
+  loadingText: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#666',
   },
 });
 
