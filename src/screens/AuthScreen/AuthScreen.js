@@ -21,7 +21,7 @@ const InputField = ({ icon, placeholder, value, onChangeText, isPassword = false
 );
 
 // SignIn screen component
-const SignIn = ({ navigation }) => {
+const SignIn = ({ navigation, onSignInSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -31,8 +31,7 @@ const SignIn = ({ navigation }) => {
       if (storedUser !== null) {
         const user = JSON.parse(storedUser);
         if (user.email === email && user.password === password) {
-          Alert.alert('Sign In Successful', 'Welcome back!');
-          navigation.navigate('ProfileScreen'); // Navigate to ProfileScreen
+          onSignInSuccess(); // Trigger loading and navigation in the main component
         } else {
           Alert.alert('Invalid Credentials', 'Please check your email or password.');
         }
@@ -99,6 +98,26 @@ const SignUp = ({ navigation }) => {
 const Tab = createMaterialTopTabNavigator();
 
 const AuthScreen = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
+
+  // Main loading function
+  const performLoadingActions = async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setLoading(false);
+        Alert.alert('Sign In Successful', 'Welcome back!');
+        navigation.navigate('ProfileScreen'); // Navigate to ProfileScreen
+        resolve();
+      }, 2000); // Simulate loading with a 2-second delay
+    });
+  };
+
+  // Handle sign-in success
+  const handleSignInSuccess = async () => {
+    setLoading(true);
+    await performLoadingActions(); // Handle loading and navigation
+  };
+
   return (
     <View style={styles.container}>
       {/* App Logo */}
@@ -117,7 +136,9 @@ const AuthScreen = ({ navigation }) => {
               tabBarLabelStyle: { fontWeight: '600' },
             }}
           >
-            <Tab.Screen name="Sign In" component={SignIn} />
+            <Tab.Screen name="Sign In">
+              {(props) => <SignIn {...props} onSignInSuccess={handleSignInSuccess} />}
+            </Tab.Screen>
             <Tab.Screen name="Sign Up" component={SignUp} />
           </Tab.Navigator>
         </NavigationContainer>
