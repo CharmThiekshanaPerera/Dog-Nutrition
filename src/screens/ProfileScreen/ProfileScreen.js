@@ -27,7 +27,6 @@ const ProfileScreen = ({ route, navigation }) => {
   useEffect(() => {
     fetchUserData();
 
-    // Reload user data if coming from AddPaymentMethodScreen with refresh parameter
     if (route.params?.refresh) {
       fetchUserData();
     }
@@ -36,7 +35,7 @@ const ProfileScreen = ({ route, navigation }) => {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('user');
-      navigation.navigate('AuthScreen'); // Navigate back to the Auth screen
+      navigation.navigate('AuthScreen');
     } catch (error) {
       console.error('Error logging out:', error);
     }
@@ -76,56 +75,69 @@ const ProfileScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.profilePhotoContainer} onPress={handleProfilePhotoChange}>
-        {user.profilePhoto ? (
+      <View style={styles.profileHeader}>
+        {/* {user.profilePhoto ? (
           <Image source={{ uri: user.profilePhoto }} style={styles.profilePhoto} />
         ) : (
-          <Text style={styles.addPhotoText}>Add Photo</Text>
+          <View style={styles.profilePhotoPlaceholder}>
+            <Text style={styles.profilePhotoText}>Profile Photo</Text>
+          </View>
         )}
-      </TouchableOpacity>
-
-      <View style={styles.detailContainer}>
-        <Text style={styles.detailLabel}>Full Name:</Text>
-        {isEditing ? (
-          <TextInput
-            style={styles.detailValueInput}
-            value={user.fullName}
-            onChangeText={(text) => setUser({ ...user, fullName: text })}
-          />
-        ) : (
-          <Text style={styles.detailValue}>{user.fullName}</Text>
-        )}
+        <TouchableOpacity style={styles.changePhotoButton} onPress={handleProfilePhotoChange}>
+          <Text style={styles.changePhotoButtonText}>Change Photo</Text>
+        </TouchableOpacity> */}
       </View>
 
-      <View style={styles.detailContainer}>
-        <Text style={styles.detailLabel}>Email:</Text>
-        {isEditing ? (
-          <TextInput
-            style={styles.detailValueInput}
-            value={user.email}
-            onChangeText={(text) => setUser({ ...user, email: text })}
-          />
-        ) : (
-          <Text style={styles.detailValue}>{user.email}</Text>
-        )}
+      <View style={styles.card}>
+        <View style={styles.cardContent}>
+          <Text style={styles.cardTitle}>Full Name:</Text>
+          {isEditing ? (
+            <TextInput
+              style={styles.detailValueInput}
+              value={user.fullName}
+              onChangeText={(text) => setUser({ ...user, fullName: text })}
+            />
+          ) : (
+            <Text style={styles.cardDetail}>{user.fullName}</Text>
+          )}
+        </View>
       </View>
 
-      <View style={styles.detailContainer}>
-        <Text style={styles.detailLabel}>Address:</Text>
-        {isEditing ? (
-          <TextInput
-            style={styles.detailValueInput}
-            value={user.address}
-            onChangeText={(text) => setUser({ ...user, address: text })}
-          />
-        ) : (
-          <Text style={styles.detailValue}>{user.address}</Text>
-        )}
+      <View style={styles.card}>
+        <View style={styles.cardContent}>
+          <Text style={styles.cardTitle}>Email:</Text>
+          {isEditing ? (
+            <TextInput
+              style={styles.detailValueInput}
+              value={user.email}
+              onChangeText={(text) => setUser({ ...user, email: text })}
+            />
+          ) : (
+            <Text style={styles.cardDetail}>{user.email}</Text>
+          )}
+        </View>
       </View>
 
-      <View style={styles.detailContainer}>
-        <Text style={styles.detailLabel}>Payment Method:</Text>
-        <Text style={styles.detailValue}>{user.paymentMethod ? user.paymentMethod.type : 'None'}</Text>
+      <View style={styles.card}>
+        <View style={styles.cardContent}>
+          <Text style={styles.cardTitle}>Address:</Text>
+          {isEditing ? (
+            <TextInput
+              style={styles.detailValueInput}
+              value={user.address}
+              onChangeText={(text) => setUser({ ...user, address: text })}
+            />
+          ) : (
+            <Text style={styles.cardDetail}>{user.address}</Text>
+          )}
+        </View>
+      </View>
+
+      <View style={styles.card}>
+        <View style={styles.cardContent}>
+          <Text style={styles.cardTitle}>Payment Method:</Text>
+          <Text style={styles.cardDetail}>{user.paymentMethod ? user.paymentMethod.type : 'None'}</Text>
+        </View>
       </View>
 
       {isEditing ? (
@@ -140,7 +152,6 @@ const ProfileScreen = ({ route, navigation }) => {
           <TouchableOpacity style={styles.addPaymentButton} onPress={() => navigation.navigate('AddPaymentMethodScreen')}>
             <Text style={styles.addPaymentButtonText}>Add Payment Method</Text>
           </TouchableOpacity>
-
           <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
             <Text style={styles.logoutButtonText}>Logout</Text>
           </TouchableOpacity>
@@ -153,96 +164,124 @@ const ProfileScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f5f5f5',
+    padding: 16,
   },
-  profilePhotoContainer: {
-    alignSelf: 'center',
-    marginBottom: 30,
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#e0e0e0',
-    justifyContent: 'center',
+  profileHeader: {
     alignItems: 'center',
+    marginBottom: 20,
   },
   profilePhoto: {
     width: 120,
     height: 120,
     borderRadius: 60,
+    backgroundColor: '#ddd',
+    marginBottom: 10,
   },
-  addPhotoText: {
-    fontSize: 18,
+  profilePhotoPlaceholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  profilePhotoText: {
+    fontSize: 16,
+    color: '#555',
+  },
+  changePhotoButton: {
+    backgroundColor: '#ff6347',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    elevation: 2,
+  },
+  changePhotoButtonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    elevation: 2,
+    marginBottom: 16,
+    padding: 16,
+  },
+  cardContent: {
+    flexDirection: 'column',
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+  },
+  cardDetail: {
+    fontSize: 16,
     color: '#666',
-  },
-  detailContainer: {
-    marginBottom: 20,
-  },
-  detailLabel: {
-    fontSize: 18,
-    fontWeight: '500',
-    color: '#666',
-  },
-  detailValue: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#000',
   },
   detailValueInput: {
-    fontSize: 20,
-    fontWeight: '600',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    color: '#000',
-  },
-  editButton: {
-    marginTop: 30,
-    backgroundColor: '#5bc0de',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  editButtonText: {
-    color: '#fff',
-    fontWeight: '600',
+    fontSize: 16,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 4,
+    padding: 8,
+    backgroundColor: '#fff',
   },
   saveButton: {
-    marginTop: 30,
-    backgroundColor: '#5cb85c',
-    paddingVertical: 15,
+    backgroundColor: '#4caf50',
+    paddingVertical: 12,
     borderRadius: 8,
+    marginBottom: 10,
     alignItems: 'center',
   },
   saveButtonText: {
     color: '#fff',
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  editButton: {
+    backgroundColor: '#2196f3',
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  editButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   addPaymentButton: {
-    marginTop: 20,
-    backgroundColor: '#0275d8',
-    paddingVertical: 15,
+    backgroundColor: '#ff9800',
+    paddingVertical: 12,
     borderRadius: 8,
+    marginBottom: 10,
     alignItems: 'center',
   },
   addPaymentButtonText: {
     color: '#fff',
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   logoutButton: {
-    marginTop: 20,
-    backgroundColor: '#d9534f',
-    paddingVertical: 15,
+    backgroundColor: '#f44336',
+    paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
   },
   logoutButtonText: {
     color: '#fff',
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   loadingText: {
     fontSize: 18,
-    textAlign: 'center',
     color: '#666',
+    textAlign: 'center',
+    marginTop: 50,
   },
 });
 
