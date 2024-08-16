@@ -1,14 +1,31 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const ProductDetails = ({ route, navigation }) => {
   const { product } = route.params;
 
-  const handleAddToCart = () => {
-    // Logic to add product to cart
-    console.log('Added to Cart:', product.title);
-    // You can navigate to the Cart screen or show a toast message here.
+  const handleAddToCart = async () => {
+    try {
+      const cart = await AsyncStorage.getItem('cart');
+      const cartItems = cart ? JSON.parse(cart) : [];
+
+      const productInCart = cartItems.find((item) => item.id === product.id);
+
+      if (productInCart) {
+        productInCart.quantity += 1;
+      } else {
+        cartItems.push({ ...product, quantity: 1 });
+      }
+
+      await AsyncStorage.setItem('cart', JSON.stringify(cartItems));
+      Alert.alert('Success', 'Item added to cart!', [
+        { text: 'Go to Cart', onPress: () => navigation.navigate('CartScreen') },
+      ]);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

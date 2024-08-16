@@ -8,6 +8,8 @@ import CategoryScreen from '../screens/CategoryScreen/CategoryScreen';
 import ProductScreen from '../screens/ProductScreen/ProductScreen';
 import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
 import ProductDetails from '../screens/ProductScreen/ProductDetails';
+import CartScreen from '../screens/CartScreen/CartScreen';
+import MyOrders from '../screens/CartScreen/MyOrders';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +24,8 @@ const AppNavigator = () => {
         <Stack.Screen name="ProductScreen" component={ProductScreen} options={({ route }) => ({ title: route.params.categoryName })} />
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ title: 'Your Profile' }} />
         <Stack.Screen name="ProductDetails" component={ProductDetails} />
+        <Stack.Screen name="CartScreen" component={CartScreen} />
+        <Stack.Screen name="MyOrders" component={MyOrders} />
       </Stack.Navigator>
     </NavigationContainer>
   );
