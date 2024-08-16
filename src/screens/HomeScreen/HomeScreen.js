@@ -43,12 +43,14 @@ const CategoryItem = ({ item, navigation }) => (
   </TouchableOpacity>
 );
 
-const BestSellerItem = ({ item }) => (
-  <TouchableOpacity style={styles.productCard}>
+const BestSellerItem = ({ item, navigation }) => (
+  <TouchableOpacity 
+    style={styles.productCard} 
+    onPress={() => navigation.navigate('ProductDetails', { product: item })}
+  >
     <Image style={styles.productThumbnail} source={{ uri: item.thumbnail }} />
     <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
     <View style={styles.productInfo}>
-    {/* <Text style={styles.productId}>{item.id}</Text> */}
       <Text style={styles.productPrice}>${item.price}</Text>
       <View style={styles.ratingContainer}>
         <MaterialCommunityIcons name="star" size={18} color="#FFBE5B" />
@@ -83,7 +85,7 @@ const HomeScreen = ({ navigation }) => {
         <Text style={styles.sectionTitle}>Best Sellers</Text>
         <FlatList
           data={products}
-          renderItem={({ item }) => <BestSellerItem item={item} />}
+          renderItem={({ item }) => <BestSellerItem item={item} navigation={navigation} />}
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
