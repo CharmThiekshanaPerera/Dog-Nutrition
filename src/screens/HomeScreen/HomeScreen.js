@@ -96,14 +96,15 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#f5f5f5',
   },
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 10,
+    padding: 16,
+    backgroundColor: '#ffffff',
+    elevation: 4,
   },
   logoContainer: {
     flexDirection: 'row',
@@ -112,59 +113,64 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#333',
   },
   logoHighlight: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF9900',
+    color: '#ff6347',
   },
   iconRow: {
     flexDirection: 'row',
-    alignItems: 'center',
   },
   icon: {
-    marginLeft: 15,
-    fontSize: 28,
-    color: '#000',
+    fontSize: 24,
+    color: '#333',
+    marginHorizontal: 12,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E7E7E7',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#ffffff',
     borderRadius: 8,
-    marginHorizontal: 20,
-    marginVertical: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    margin: 16,
+    elevation: 2,
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
+    color: '#333',
   },
   searchIcon: {
-    marginLeft: 10,
+    marginLeft: 8,
   },
   categoryContainer: {
-    paddingHorizontal: 20,
-    //marginBottom: 20,
+    marginVertical: 8,
   },
   categoryList: {
-    paddingVertical: 10,
+    //paddingVertical: 10,
   },
   categoryItem: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 20,
-    marginRight: 10,
+    backgroundColor: '#ffffff',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginHorizontal: 8,
+    marginVertical:8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 2,
   },
   categoryText: {
     fontSize: 16,
-    fontWeight: '500',
+    color: '#333',
+    fontWeight: 'bold',
   },
   sectionContainer: {
     paddingHorizontal: 20,
-    marginTop: 20,
+    //marginTop: 20,
   },
   sectionTitle: {
     fontSize: 22,
@@ -220,5 +226,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 });
+
 
 export default HomeScreen;
