@@ -9,7 +9,7 @@ const ProfileScreen = ({ navigation }) => {
     email: '',
     address: '',
     profilePhoto: null,
-    paymentMethods: [],
+    paymentMethod: null,
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -60,17 +60,6 @@ const ProfileScreen = ({ navigation }) => {
     } catch (error) {
       console.error('Error saving profile changes:', error);
     }
-  };
-
-  const handleAddPaymentMethod = () => {
-    // Simple example; you would usually add a full form for card details or other payment methods
-    Alert.prompt('Add Payment Method', 'Enter payment method details', async (method) => {
-      if (method) {
-        const updatedMethods = [...user.paymentMethods, method];
-        setUser({ ...user, paymentMethods: updatedMethods });
-        await AsyncStorage.setItem('user', JSON.stringify({ ...user, paymentMethods: updatedMethods }));
-      }
-    });
   };
 
   if (!user.fullName && !isEditing) {
@@ -130,6 +119,11 @@ const ProfileScreen = ({ navigation }) => {
         )}
       </View>
 
+      <View style={styles.detailContainer}>
+        <Text style={styles.detailLabel}>Payment Method:</Text>
+        <Text style={styles.detailValue}>{user.paymentMethod ? user.paymentMethod.type : 'None'}</Text>
+      </View>
+
       {isEditing ? (
         <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
           <Text style={styles.saveButtonText}>Save Changes</Text>
@@ -140,8 +134,8 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={styles.editButtonText}>Edit Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.addPaymentButton} onPress={() => navigation.navigate('AddPaymentMethodScreen')}>
-  <Text style={styles.addPaymentButtonText}>Add Payment Method</Text>
-</TouchableOpacity>
+            <Text style={styles.addPaymentButtonText}>Add Payment Method</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
             <Text style={styles.logoutButtonText}>Logout</Text>

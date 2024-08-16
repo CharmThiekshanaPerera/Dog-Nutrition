@@ -39,7 +39,7 @@ const AddPaymentMethodScreen = ({ navigation }) => {
       const user = storedUser ? JSON.parse(storedUser) : {};
       const updatedUser = {
         ...user,
-        paymentMethods: [...(user.paymentMethods || []), paymentMethod],
+        paymentMethod, // Save only the current payment method
       };
       await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
       Alert.alert('Success', 'Payment method added successfully!');
