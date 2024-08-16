@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image, Alert } fro
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'react-native-image-picker';
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({ route, navigation }) => {
   const [user, setUser] = useState({
     fullName: '',
     email: '',
@@ -11,23 +11,27 @@ const ProfileScreen = ({ navigation }) => {
     profilePhoto: null,
     paymentMethod: null,
   });
-
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const storedUser = await AsyncStorage.getItem('user');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-      } catch (error) {
-        console.error('Error loading user data:', error);
+  const fetchUserData = async () => {
+    try {
+      const storedUser = await AsyncStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
       }
-    };
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    }
+  };
 
-    getUserData();
-  }, []);
+  useEffect(() => {
+    fetchUserData();
+
+    // Reload user data if coming from AddPaymentMethodScreen with refresh parameter
+    if (route.params?.refresh) {
+      fetchUserData();
+    }
+  }, [route.params?.refresh]);
 
   const handleLogout = async () => {
     try {

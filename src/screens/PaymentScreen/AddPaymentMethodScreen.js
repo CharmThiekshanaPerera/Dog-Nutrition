@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddPaymentMethodScreen = ({ navigation }) => {
@@ -10,6 +10,7 @@ const AddPaymentMethodScreen = ({ navigation }) => {
     expiryDate: '',
     cvv: '',
   });
+  const [loading, setLoading] = useState(false);
 
   const handleSavePaymentMethod = async () => {
     if (selectedMethod === 'card') {
@@ -34,6 +35,7 @@ const AddPaymentMethodScreen = ({ navigation }) => {
   };
 
   const savePaymentMethod = async (paymentMethod) => {
+    setLoading(true);
     try {
       const storedUser = await AsyncStorage.getItem('user');
       const user = storedUser ? JSON.parse(storedUser) : {};
@@ -43,10 +45,13 @@ const AddPaymentMethodScreen = ({ navigation }) => {
       };
       await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
       Alert.alert('Success', 'Payment method added successfully!');
-      navigation.goBack();
+      // Refresh user data and navigate back to ProfileScreen
+      navigation.navigate('ProfileScreen', { refresh: true });
     } catch (error) {
       console.error('Error saving payment method:', error);
       Alert.alert('Error', 'Failed to save payment method.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,8 +115,12 @@ const AddPaymentMethodScreen = ({ navigation }) => {
       {selectedMethod === 'card' && renderCardForm()}
 
       {/* Save Button */}
-      <TouchableOpacity style={styles.saveButton} onPress={handleSavePaymentMethod}>
-        <Text style={styles.saveButtonText}>Save Payment Method</Text>
+      <TouchableOpacity style={styles.saveButton} onPress={handleSavePaymentMethod} disabled={loading}>
+        {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={styles.saveButtonText}>Save Payment Method</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
