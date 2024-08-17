@@ -15,9 +15,6 @@ const Header = ({ navigation }) => (
       <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
         <MaterialCommunityIcons name="account-circle-outline" style={styles.icon} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('FavoritesScreen')}>
-        <MaterialCommunityIcons name="cards-heart-outline" style={styles.icon} />
-      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('CartScreen')}>
         <MaterialCommunityIcons name="cart-outline" style={styles.icon} />
       </TouchableOpacity>
