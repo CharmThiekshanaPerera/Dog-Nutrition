@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native'; // Import navigation hook
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
+  const navigation = useNavigation(); // Hook for navigation
 
   useEffect(() => {
     const loadOrders = async () => {
@@ -62,6 +64,14 @@ const MyOrders = () => {
 
   return (
     <View style={styles.container}>
+      {/* Home Button */}
+      <TouchableOpacity
+        style={styles.homeButton}
+        onPress={() => navigation.navigate('HomeScreen')} // Navigate to HomeScreen
+      >
+        <AntDesign name="home" size={24} color="#fff" />
+      </TouchableOpacity>
+
       <FlatList
         data={orders}
         renderItem={renderOrderItem}
@@ -77,6 +87,15 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#f5f5f5',
+  },
+  homeButton: {
+    position: 'absolute',
+    bottom: 20, // Positioning at the bottom
+    right: 20, // Positioning on the right
+    backgroundColor: '#ff6347',
+    padding: 15,
+    borderRadius: 50,
+    zIndex: 1,
   },
   orderItem: {
     backgroundColor: '#fff',
