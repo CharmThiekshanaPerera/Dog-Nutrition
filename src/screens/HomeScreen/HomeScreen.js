@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, FlatList, SafeAreaView } from 'react-native';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
-import CarouselComponent from './components/CarouselComponent';
 import categories from '../../data/categories';
 import products from '../../data/products';
 
@@ -22,15 +21,6 @@ const Header = ({ navigation }) => (
   </View>
 );
 
-const SearchBar = ({ navigation }) => (
-  <View style={styles.searchContainer}>
-    <TextInput placeholder="Search for a product..." style={styles.searchInput} />
-    <TouchableOpacity style={styles.searchIcon} onPress={() => navigation.navigate('DiscoverScreen')}>
-      <Feather name="search" size={24} color="grey" />
-    </TouchableOpacity>
-  </View>
-);
-
 const CategoryItem = ({ item, navigation }) => (
   <TouchableOpacity
     style={styles.categoryItem}
@@ -41,12 +31,14 @@ const CategoryItem = ({ item, navigation }) => (
 );
 
 const BestSellerItem = ({ item, navigation }) => (
-  <TouchableOpacity 
-    style={styles.productCard} 
+  <TouchableOpacity
+    style={styles.productCard}
     onPress={() => navigation.navigate('ProductDetails', { product: item })}
   >
     <Image style={styles.productThumbnail} source={{ uri: item.thumbnail }} />
-    <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
+    <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">
+      {item.title}
+    </Text>
     <View style={styles.productInfo}>
       <Text style={styles.productPrice}>${item.price}</Text>
       <View style={styles.ratingContainer}>
@@ -57,13 +49,34 @@ const BestSellerItem = ({ item, navigation }) => (
   </TouchableOpacity>
 );
 
+const SearchBar = ({ searchTerm, setSearchTerm }) => (
+  <View style={styles.searchContainer}>
+    <Feather name="search" size={20} color="#333" style={styles.searchIcon} />
+    <TextInput
+      style={styles.searchInput}
+      placeholder="Search products..."
+      value={searchTerm}
+      onChangeText={(text) => setSearchTerm(text)}
+    />
+  </View>
+);
+
 const HomeScreen = ({ navigation }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Filter products based on search term
+  const filteredProducts = products.filter((product) =>
+    product.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Header Section */}
       <Header navigation={navigation} />
+
       {/* Search Bar */}
-      <SearchBar navigation={navigation} />
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
       {/* Category List */}
       <View style={styles.categoryContainer}>
         <FlatList
@@ -75,18 +88,18 @@ const HomeScreen = ({ navigation }) => {
           contentContainerStyle={styles.categoryList}
         />
       </View>
-      {/* Banners Carousel */}
-      {/* <CarouselComponent /> */}
+
       {/* Best Sellers Section */}
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Best Sellers</Text>
         <FlatList
-          data={products}
+          data={filteredProducts}
           renderItem={({ item }) => <BestSellerItem item={item} navigation={navigation} />}
           keyExtractor={(item) => item.id.toString()}
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
           contentContainerStyle={styles.bestSellersList}
+          ListEmptyComponent={<Text style={styles.emptyText}>No products found.</Text>}
         />
       </View>
     </SafeAreaView>
@@ -144,13 +157,13 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   searchIcon: {
-    marginLeft: 8,
+    marginRight: 10,
   },
   categoryContainer: {
     marginVertical: 8,
   },
   categoryList: {
-    //paddingVertical: 10,
+    paddingVertical: 10,
   },
   categoryItem: {
     backgroundColor: '#ffffff',
@@ -158,7 +171,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 8,
     marginHorizontal: 8,
-    marginVertical:8,
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 2,
@@ -170,7 +182,6 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     paddingHorizontal: 20,
-    //marginTop: 20,
   },
   sectionTitle: {
     fontSize: 22,
@@ -225,7 +236,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 5,
   },
+  emptyText: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: '#888',
+    marginTop: 20,
+  },
 });
-
 
 export default HomeScreen;
