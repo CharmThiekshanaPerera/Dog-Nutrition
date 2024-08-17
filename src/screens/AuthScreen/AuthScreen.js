@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, Image } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Import your logo image
+import appLogo from '../../../assets/logo.jpg'; // Adjust the path according to your project structure
 
 // InputField component
 const InputField = ({ icon, placeholder, value, onChangeText, isPassword = false }) => (
@@ -106,7 +109,7 @@ const AuthScreen = ({ navigation }) => {
       setTimeout(() => {
         setLoading(false);
         Alert.alert('Sign In Successful', 'Welcome back!');
-        navigation.navigate('ProfileScreen'); // Navigate to ProfileScreen
+        navigation.navigate('HomeScreen'); // Navigate to ProfileScreen
         resolve();
       }, 2000); // Simulate loading with a 2-second delay
     });
@@ -122,8 +125,11 @@ const AuthScreen = ({ navigation }) => {
     <View style={styles.container}>
       {/* App Logo */}
       <View style={styles.logoContainer}>
-        <Text style={styles.logoTextPrimary}>Open</Text>
-        <Text style={styles.logoTextSecondary}>Shop.</Text>
+        <Image source={appLogo} style={styles.logoImage} />
+        <View style={styles.logoTextContainer}>
+          <Text style={styles.logoTextPrimary}>Dog </Text>
+          <Text style={styles.logoTextSecondary}>Nutrition</Text>
+        </View>
       </View>
 
       {/* Tab Navigator */}
@@ -145,9 +151,9 @@ const AuthScreen = ({ navigation }) => {
       </View>
 
       {/* Guest Sign-In Button */}
-      <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.guestButton}>
+      {/* <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.guestButton}>
         <Text style={styles.guestButtonText}>Sign in as a Guest</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -167,20 +173,38 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
   },
   logoContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  logoImage: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    marginBottom: 10,
+    borderRadius:20
+  },
+  logoTextContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 20,
+    alignItems: 'center',
+  },
+  logoTextPrimary: {
+    fontSize: 36,
+    fontWeight: '700',
+    color: '#333',
+    fontFamily: 'Arial', // You can change this to a custom font if needed
+  },
+  logoTextSecondary: {
+    fontSize: 36,
+    fontWeight: '700',
+    color: '#ff6347', // Tomato color
+    marginLeft: 5,
   },
   logoTextPrimary: {
     fontSize: 32,
     fontWeight: '800',
     color: '#000',
   },
-  logoTextSecondary: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: '#FF9900',
-  },
+
   tabContainer: {
     flex: 1,
     marginTop: 20,

@@ -7,8 +7,8 @@ import products from '../../data/products';
 const Header = ({ navigation }) => (
   <View style={styles.headerContainer}>
     <View style={styles.logoContainer}>
-      <Text style={styles.logoText}>Open</Text>
-      <Text style={styles.logoHighlight}>Shop.</Text>
+      <Text style={styles.logoText}>Dog </Text>
+      <Text style={styles.logoHighlight}>Nutrition</Text>
     </View>
     <View style={styles.iconRow}>
       <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
