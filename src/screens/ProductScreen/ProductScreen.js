@@ -1,11 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, SafeAreaView, Alert } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import products from '../../data/products';
 
-const ProductItem = ({ item }) => (
-  <TouchableOpacity style={styles.productCard}>
+const ProductItem = ({ item, handleAddToCart }) => (
+  <View style={styles.productCard}>
     <Image style={styles.productThumbnail} source={{ uri: item.thumbnail }} />
-    <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{item.title}</Text>
+    <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">
+      {item.title}
+    </Text>
     <Text style={styles.productCategory}>{item.categoryName}</Text>
     <View style={styles.productInfo}>
       <Text style={styles.productPrice}>${item.price}</Text>
@@ -13,21 +17,47 @@ const ProductItem = ({ item }) => (
         <Text style={styles.productRating}>{item.rating}</Text>
       </View>
     </View>
-  </TouchableOpacity>
+    <TouchableOpacity style={styles.addToCartButton} onPress={() => handleAddToCart(item)}>
+      <Text style={styles.addToCartText}>Add to Cart</Text>
+      <MaterialCommunityIcons name="cart-plus" size={20} color="#fff" />
+    </TouchableOpacity>
+  </View>
 );
 
-const ProductScreen = ({ route }) => {
+const ProductScreen = ({ route, navigation }) => {
   const { categoryId, categoryName } = route.params;
 
   // Filter products based on the selected category
   const filteredProducts = products.filter(product => product.categoryId === categoryId);
+
+  const handleAddToCart = async (product) => {
+    try {
+      const cart = await AsyncStorage.getItem('cart');
+      const cartItems = cart ? JSON.parse(cart) : [];
+
+      const productInCart = cartItems.find((item) => item.id === product.id);
+
+      if (productInCart) {
+        productInCart.quantity += 1;
+      } else {
+        cartItems.push({ ...product, quantity: 1 });
+      }
+
+      await AsyncStorage.setItem('cart', JSON.stringify(cartItems));
+      Alert.alert('Success', 'Item added to cart!', [
+        { text: 'Go to Cart', onPress: () => navigation.navigate('CartScreen') },
+      ]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.headerTitle}>{categoryName}</Text>
       <FlatList
         data={filteredProducts}
-        renderItem={({ item }) => <ProductItem item={item} />}
+        renderItem={({ item }) => <ProductItem item={item} handleAddToCart={handleAddToCart} />}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
@@ -94,6 +124,21 @@ const styles = StyleSheet.create({
   productRating: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  addToCartButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ff6347',
+    paddingVertical: 8,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  addToCartText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: 'bold',
+    marginRight: 5,
   },
 });
 
