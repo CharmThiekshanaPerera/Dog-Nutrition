@@ -11,6 +11,7 @@ import ProductDetails from '../screens/ProductScreen/ProductDetails';
 import CartScreen from '../screens/CartScreen/CartScreen';
 import MyOrders from '../screens/CartScreen/MyOrders';
 import AddPaymentMethodScreen from '../screens/PaymentScreen/AddPaymentMethodScreen';
+import Articles from '../screens/Articles/Articles';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ const AppNavigator = () => {
         <Stack.Screen name="CartScreen" component={CartScreen} />
         <Stack.Screen name="MyOrders" component={MyOrders} />
         <Stack.Screen name="AddPaymentMethodScreen" component={AddPaymentMethodScreen} />
+        <Stack.Screen name="Articles" component={Articles} />
       </Stack.Navigator>
     </NavigationContainer>
   );

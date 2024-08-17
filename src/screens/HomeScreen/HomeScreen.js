@@ -11,6 +11,9 @@ const Header = ({ navigation }) => (
       <Text style={styles.logoHighlight}>Nutrition</Text>
     </View>
     <View style={styles.iconRow}>
+    <TouchableOpacity onPress={() => navigation.navigate('Articles')}>
+        <Feather name="book-open" style={styles.icon} />
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
         <MaterialCommunityIcons name="account-circle-outline" style={styles.icon} />
       </TouchableOpacity>
