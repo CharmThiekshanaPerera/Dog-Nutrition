@@ -151,9 +151,9 @@ const AuthScreen = ({ navigation }) => {
       </View>
 
       {/* Guest Sign-In Button */}
-      {/* <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.guestButton}>
+      <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')} style={styles.guestButton}>
         <Text style={styles.guestButtonText}>Sign in as a Guest</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 };
